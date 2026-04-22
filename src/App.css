@@ -123,6 +123,14 @@ h1 {
   color: #f87171;
 }
 
+.result-card.suspicious {
+  border-color: #4a3a10;
+}
+
+.result-card.suspicious h2 {
+  color: #facc15;
+}
+
 .result-card.error {
   border-color: #3a2a1a;
 }
@@ -176,4 +184,131 @@ h1 {
 
 .btn-danger:hover {
   background: #a93226;
+}
+
+/* Score meter */
+.meter-wrap {
+  margin: 1.2rem 0 1.6rem;
+  text-align: left;
+}
+
+.meter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.meter-label {
+  font-size: 0.8rem;
+  color: #888899;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.meter-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.meter-max {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #555568;
+}
+
+.meter-track {
+  height: 10px;
+  background: #1e1e2e;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.meter-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  color: #44445a;
+}
+
+.meter-severity {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #888899;
+}
+
+.meter-overflow {
+  font-size: 0.75rem;
+  color: #555568;
+}
+
+/* Findings list */
+.findings {
+  margin: 0 0 1.4rem;
+  text-align: left;
+}
+
+.findings-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #555568;
+  margin-bottom: 0.5rem;
+}
+
+.findings-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.finding {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  grid-template-rows: auto auto;
+  gap: 0.1rem 0.6rem;
+  background: #0d0d14;
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  border-left: 3px solid transparent;
+}
+
+.finding-critical { border-left-color: #f87171; }
+.finding-high     { border-left-color: #fb923c; }
+.finding-medium   { border-left-color: #facc15; }
+.finding-low      { border-left-color: #a3e635; }
+
+.finding-engine {
+  grid-row: 1;
+  grid-column: 1;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555568;
+  align-self: center;
+}
+
+.finding-sig {
+  grid-row: 1;
+  grid-column: 2;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #c0c0d8;
+  font-family: monospace;
+}
+
+.finding-desc {
+  grid-row: 2;
+  grid-column: 2;
+  font-size: 0.78rem;
+  color: #7070a0;
 }

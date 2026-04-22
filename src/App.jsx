@@ -1,10 +1,12 @@
 import { useState, useRef } from 'react'
+import ScoreMeter from './ScoreMeter'
 import './App.css'
 
 const STATUS = {
   IDLE: 'idle',
   LOADING: 'loading',
   CLEAN: 'clean',
+  SUSPICIOUS: 'suspicious',
   MALWARE: 'malware',
   ERROR: 'error',
 }
@@ -34,8 +36,11 @@ export default function App() {
         return
       }
 
-      const isMalware = data?.malware === true || data?.result === 'malware'
-      setStatus(isMalware ? STATUS.MALWARE : STATUS.CLEAN)
+      const verdict = data?.result
+      if (verdict === 'malicious' || data?.malware === true) setStatus(STATUS.MALWARE)
+      else if (verdict === 'suspicious') setStatus(STATUS.SUSPICIOUS)
+      else setStatus(STATUS.CLEAN)
+
       setResult(data)
     } catch (err) {
       setStatus(STATUS.ERROR)
@@ -62,6 +67,8 @@ export default function App() {
     if (inputRef.current) inputRef.current.value = ''
   }
 
+  const showResult = [STATUS.CLEAN, STATUS.SUSPICIOUS, STATUS.MALWARE].includes(status)
+
   return (
     <div className="page">
       <header className="header">
@@ -82,12 +89,7 @@ export default function App() {
             <span className="drop-icon">&#x1F4C2;</span>
             <p className="drop-text">Drop a file here or <span className="link">click to browse</span></p>
             <p className="drop-hint">Any file type accepted</p>
-            <input
-              ref={inputRef}
-              type="file"
-              hidden
-              onChange={handleFileChange}
-            />
+            <input ref={inputRef} type="file" hidden onChange={handleFileChange} />
           </div>
         )}
 
@@ -98,22 +100,43 @@ export default function App() {
           </div>
         )}
 
-        {status === STATUS.CLEAN && (
-          <div className="card result-card clean">
-            <span className="result-icon">&#x2705;</span>
-            <h2>No Threats Detected</h2>
-            <p className="file-label">{fileName}</p>
-            <button className="btn" onClick={reset}>Scan another file</button>
-          </div>
-        )}
+        {showResult && (
+          <div className={`card result-card ${status}`}>
+            <span className="result-icon">
+              {status === STATUS.CLEAN      ? '✅' :
+               status === STATUS.SUSPICIOUS ? '⚠️' : '🚨'}
+            </span>
 
-        {status === STATUS.MALWARE && (
-          <div className="card result-card malware">
-            <span className="result-icon">&#x1F6A8;</span>
-            <h2>Malware Detected</h2>
+            <h2>
+              {status === STATUS.CLEAN      ? 'No Threats Detected' :
+               status === STATUS.SUSPICIOUS ? 'Suspicious File'     : 'Malware Detected'}
+            </h2>
+
             <p className="file-label">{fileName}</p>
-            {result?.details && <p className="details">{result.details}</p>}
-            <button className="btn btn-danger" onClick={reset}>Scan another file</button>
+
+            <ScoreMeter score={result?.score ?? 0} />
+
+            {result?.findings?.length > 0 && (
+              <div className="findings">
+                <p className="findings-title">Findings</p>
+                <ul className="findings-list">
+                  {result.findings.map((f, i) => (
+                    <li key={i} className={`finding finding-${f.severity}`}>
+                      <span className="finding-engine">{f.engine}</span>
+                      <span className="finding-sig">{f.signature}</span>
+                      <span className="finding-desc">{f.description}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <button
+              className={`btn${status === STATUS.MALWARE ? ' btn-danger' : ''}`}
+              onClick={reset}
+            >
+              Scan another file
+            </button>
           </div>
         )}
 
